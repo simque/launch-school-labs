@@ -27,10 +27,19 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
+def keep_score(hash, player, computer)
+   if win?(player, computer)
+      hash[:player] += 1
+    elsif win?(computer, player)
+      hash[:computer] += 1
+    else
+      (hash[:player] += 1) && (hash[:computer] += 1)
+    end
+  end
+
 loop do # super loop
 
-  player_wins = 0
-  computer_wins = 0
+  score_keeper = {player: 0, computer: 0}
   
   loop do # main loop
     choice = ""
@@ -49,16 +58,10 @@ loop do # super loop
     Kernel.puts("You chose: #{choice}; Computer chose: #{computer_choice}")
 
     display_results(choice, computer_choice)
+    keep_score(score_keeper, choice, computer_choice)
+   
 
-    if win?(choice, computer_choice)
-      player_wins += 1
-    elsif win?(computer_choice, choice)
-      computer_wins += 1
-    else
-      (computer_wins += 1) && (player_wins += 1)
-    end
-
-    break if player_wins == 5 || computer_wins == 5
+    break if score_keeper[:player] == 5 || score_keeper[:computer] == 5
   end # main loop
 
   prompt("Would you like to play again?")
